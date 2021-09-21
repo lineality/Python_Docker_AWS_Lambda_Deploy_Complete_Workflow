@@ -194,7 +194,7 @@ Based on the AWS documentation it appears that you need a requirements.txt file 
 
 #### Note: For the timestamp example used here, the only library needed, the only text needed in the requirements file is: "boto3" or the version used such as "boto3==1.18.44"
 
-#### Note: The ${LAMBDA_TASK_ROOT} directory
+#### Note: The Mysterious ${LAMBDA_TASK_ROOT} Directory
 On several pages (see: https://docs.aws.amazon.com/lambda/latest/dg/images-create.html & https://docs.aws.amazon.com/lambda/latest/dg/python-image.html) the AWS documentation says this: 
 "Install any dependencies under the ${LAMBDA_TASK_ROOT} directory alongside the function handler to ensure that the Lambda runtime can locate them when the function is invoked."
 It may be that this is AWS's inexplicably obscure way of saying: files you need to be included in the docker image must be in the same directory(folder) along with the docker file. But this is NOT an instruction regarding python dependencies, even though these statements are made in a context of python, which is highly irresponsible documentation writing practice. But perhaps a directory given the very odd name "${LAMBDA_TASK_ROOT}" could be created and files put inside? ....the situation is very unclear.
