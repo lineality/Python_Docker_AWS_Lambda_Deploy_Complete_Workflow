@@ -18,31 +18,30 @@ TODO
 
 #  Sources:
 Sources used for this documentation include:
-(Overall: an excellent resource)
-1. https://www.youtube.com/watch?v=HNm6jU_AUbE
+#### (Overall: an excellent resource)
+#### 1. https://www.youtube.com/watch?v=HNm6jU_AUbE
 AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change
 
-(Overally: pretty bad AWS documentation, better than usual)
-2. New for AWS Lambda – Container Image Support
+#### (Overally: pretty bad AWS documentation, better than usual)
+#### 2. New for AWS Lambda – Container Image Support
 by Danilo Poccia | on 01 DEC 2020
 https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
 
-(Overall: horrible AWS documentation as usual)
-3. Basic AWS Lambda Project Creating Docker Image
+#### (Overall: horrible AWS documentation as usual)
+#### 3. Basic AWS Lambda Project Creating Docker Image
 https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/lambda-creating-project-docker-image.html 
 
-(Overall, an OK resource using a different approach and more local resources)	
-4. deploy serverless machine-learning-models to aws-lambda
+#### (Overall, an OK resource using a different approach and more local resources)	
+#### 4. deploy serverless machine-learning-models to aws-lambda
 https://www.udemy.com/course/deploy-serverless-machine-learning-models-to-aws-lambda/ 
 
-(Focused on Python)
-5. Deploy Python Lambda functions with container images (which sites the following article)
+### (Focused on Python)
+#### 5. Deploy Python Lambda functions with container images (which sites the following article)
 https://docs.aws.amazon.com/lambda/latest/dg/python-image.html 
 +
-6. Create an image from an AWS base image for Lambda
+#### 6. Create an image from an AWS base image for Lambda
 https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
 https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
-
 
 
 
@@ -324,7 +323,6 @@ $ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
 - push the blue deploy button
 - Save "invoke URL" This will appear along the top of the browser window. Save it now as it can be tricky to find out later. (This uses a default AWS-made-up endpoint name, if you want a proper custom-named endpoint URL, that is a more elaborate (and expensive) process. This will work in a pinch, but a custom URL may be needed in the long term.)
 - Fake example: " Invoke URL: https://vrtsdhdhdhdrhdr.execute-api.us-east-1.amazonaws.com/dev "
-
 
 
 
