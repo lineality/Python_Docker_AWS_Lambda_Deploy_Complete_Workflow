@@ -54,7 +54,7 @@ https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-fr
 
 # Steps to create, upload to and deploy python code in a Docker image on AWS with endpoint access:
 
-#### Note: You don't need to type in the '$.' The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
+#### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
 
 ## Step1: create (a root) AWS account
 https://console.aws.amazon.com/iamv2/home?#/users
@@ -276,10 +276,11 @@ $ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" 
 #### Note: You are now done making and testing your Docker image! This is progress.
 
 
-## Deploy to AWS and make an endpoint: Next will be the steps to deploy your container to AWS-lambda and use AWS-api-gateway to make an endpoint to 'hit' your model with a prediction request. (or in this sample, hitting the endpoint that prints 'hello, world')
+## Deploy to AWS and make an endpoint: 
+Next will be the steps to deploy your container to AWS-lambda and use AWS-api-gateway to make an endpoint to 'hit' your model with a prediction request. (or in this sample, hitting the endpoint that prints 'hello, world')
 
 
-## Step: Store your Docker Image (in AWS) in the ECR: Elastic Container Registry, so that the docker image can be used later by AWS services. (Create the repository, push image to repository)
+#### Step: Store your Docker Image (in AWS) in the ECR: Elastic Container Registry, so that the docker image can be used later by AWS services. (Create the repository, push image to repository)
 - (back in terminal 1)
 - install docker image by running these lines:
 - BUT: replace 123412341234 with your aws number (the 12 digit number you logged in with)
