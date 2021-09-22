@@ -1,9 +1,16 @@
 # Python_Docker_AWS_Lambda_Deploy_Complete_Workflow
-Every step for deploying a python docker image (such as a machine learning model) via AWS entirely using AWS (no local software install needed.
-
+The goal here is for this guide to be a complete guide through every step for deploying a python docker image (such as a machine learning model) via AWS (Amazon Web Services). This process is entirely done using AWS through the web-console (so no local software installs a needed on your local computer, no special computers, special operating systems, special system specs, special software etc. Any browser on any computer should work.), including the required best-practice-security steps for setting up users, groups and permissions. The code development environment for this project is AWS-Cloud9. Being able to deploy a Machine Learning Model with an endpoint for access is a basic requirement for many applied projects and research projects, yet clear and complete instructions for such a basic and required process are too difficult to find. Hopefully this guide will be helpful for students, researchers, business persons, administrators, etc. 
 
 TODO
-	- does the directory need to be name app?
+	- basic model deploy
+	- custom model deploy
+	- slimmer model? 
+	- include a TFlite example
+		- include an alpine linux container?
+	- instructions for adding MFA to root account...
+	- include a sklearn example
+
+- does the directory need to be named app? (yes?)
 	- for python, what is the file structure? (WTF) 
 	- experiment around with package library install requirements,
 		- venv
@@ -16,36 +23,40 @@ TODO
 ## Note: 
 #### As is typical with AWS, there are many ways to carry out a project, but even so the documentation is usually very poor and partial, requiring a combination of working bits from many sources with lots of 'filling in the gaps' about required steps and details that were never mentioned. This documentation attempts to be 100% complete as a step by step guide.
 
-#  Sources:
+#  Sources
 Sources used for this documentation include:
+
 #### (Overall: an excellent resource)
 #### 1. https://www.youtube.com/watch?v=HNm6jU_AUbE
-AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change
+#### AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change
+
+#### 2. Enabling a virtual multi-factor authentication (MFA) device (console) 
+#### https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-iam-user 
 
 #### (Overally: pretty bad AWS documentation, better than usual)
-#### 2. New for AWS Lambda – Container Image Support
-by Danilo Poccia | on 01 DEC 2020
-https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
+#### 2. New for AWS Lambda – Container Image Support, Danilo Poccia, DEC 2020
+#### https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
 
 #### (Overall: horrible AWS documentation as usual)
 #### 3. Basic AWS Lambda Project Creating Docker Image
-https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/lambda-creating-project-docker-image.html 
+#### https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/lambda-creating-project-docker-image.html 
 
 #### (Overall, an OK resource using a different approach and more local resources)	
 #### 4. deploy serverless machine-learning-models to aws-lambda
-https://www.udemy.com/course/deploy-serverless-machine-learning-models-to-aws-lambda/ 
+#### https://www.udemy.com/course/deploy-serverless-machine-learning-models-to-aws-lambda/ 
 
 ### (Focused on Python)
-#### 5. Deploy Python Lambda functions with container images (which sites the following article)
-https://docs.aws.amazon.com/lambda/latest/dg/python-image.html 
-+
+#### 5. Deploy Python Lambda functions with container images (which sites the next following article)
+#### https://docs.aws.amazon.com/lambda/latest/dg/python-image.html 
+
 #### 6. Create an image from an AWS base image for Lambda
-https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
-https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
+#### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
+#### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
 
 
 
 # AWS Services Used: 
+This project uses the following AWS services. (Your projects may use more services. Note: You may need to use multiple permission-groups as each group can only have a limited number of permissions.)
 - AWS cloud9
 - EC2 for Cloud9: aws linux 2 ec2
 - AWS Lambda: docker container upload method
@@ -56,12 +67,11 @@ https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-fr
 
 #### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
 
-## Step1: create (a root) AWS account
+## Step: create (a root) AWS account
 https://console.aws.amazon.com/iamv2/home?#/users
 
-## Step 2: create IAM user (not root)
-
-### IAM user will need 3 items
+## Step: create IAM user (not root)
+#### IAM user will need 3 items
 1. a set of login credentials:
 - a 12 digit account number
 - user name
@@ -76,6 +86,19 @@ https://console.aws.amazon.com/iamv2/home?#/users
 - api gateway admin
 - s3 
 - AmazonEC2ContainerRegistryFullAccess (Elastic Container Registry)
+
+## Step: Setup MFA for User
+#### For long-term more-secure AWS login, set up MFA (Multi Factor Authentication) for the AWS user: The AWS Docs for this are actually accurate and useful.
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-iam-user
+#### Instructions paraphrased here: To enable a virtual MFA device for IAM user 
+- Sign in to the AWS Management Console and open the IAM console 
+- choose Users.
+- double click on blue name of the intended user.
+- Choose "Security credentials" tab. 
+- Next to Assigned MFA device, choose "Manage"
+- choose Virtual MFA device
+- on your phone use an MFA application such as "Google Authenticator" https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US, follow the instructions, scan the QR code, etc. Easy setup. 
+
 
 
 ## Step: Start up a Cloud9 coding environment:
@@ -327,4 +350,10 @@ $ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
 
 
 
+
+
+
+
+# Machine Learning Models
+Two of the main python tools for machine learning (related to each-other) are sklearn (also called SciKitLearn) and Tensorflow (TF) (and TFlite or Tensorflow Lite). There are many articles online that explain how they relate to each-other. For our purposes here: TFlite is very small, Tensorflow is small, and Sklearn is bigger. 
 
