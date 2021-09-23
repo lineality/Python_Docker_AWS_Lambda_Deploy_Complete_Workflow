@@ -1,7 +1,18 @@
 # Python_Docker_AWS_Lambda_Deploy_Complete_Workflow
-The goal here is for this guide to be a complete guide through every step for deploying a python docker image (such as a machine learning model) via AWS (Amazon Web Services). This process is entirely done using AWS through the web-console (so no local software installs a needed on your local computer, no special computers, special operating systems, special system specs, special software etc. Any browser on any computer should work.), including the required best-practice-security steps for setting up users, groups and permissions. The code development environment for this project is AWS-Cloud9. Being able to deploy a Machine Learning Model with an endpoint for access is a basic requirement for many applied projects and research projects, yet clear and complete instructions for such a basic and required process are too difficult to find. Hopefully this guide will be helpful for students, researchers, business persons, administrators, etc. 
+The goal here is for this guide to be a complete guide through every step for deploying a python docker image (such as a machine learning model) via AWS (Amazon Web Services). This process is entirely done using AWS through the web-console (so no local software installations  needed on your local computer, no special computers, special operating systems, special system specs, special software etc. Any browser on any computer should work.), including the required best-practice-security steps for setting up users, groups and permissions. The code development environment for this project is AWS-Cloud9. Being able to deploy a Machine Learning Model with an endpoint for access is a basic requirement for many applied projects and research projects, yet clear and complete instructions for such a basic and required process are too difficult to find. Hopefully this guide will be helpful for students, researchers, business persons, administrators, etc. 
+
+#### Note: Like (fragile) python environments (which are often best created and discarded and recreated), the AWS process of docker deployment is buggy-glitchy, and prone to explode in random error messages. This makes interpretation of errors less clear. It is often best to try a process a few times completely from scratch when interpreting error messages (which often will be bugs and not problems with the code). 
 
 TODO
+	- Experiments to run:
+		- try TFlite
+		- try venv
+		- try import pre-made env
+			- Try mini-test with simple script and libraries etc.
+		- try script 
+	- find the alpine script...
+https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support
+- add line in docker file to copy-model
 	- basic model deploy
 	- custom model deploy
 	- slimmer model? 
@@ -20,40 +31,44 @@ TODO
 # Overall Description:
 #### Using only AWS tools via web (no local software installs needed), deploy Machine Learning models to AWS Lambda for an external (or internal) restful-API-endpoint by uploading a Docker container to AWS-Lambda using Cloud9, S3, AWS Lambda, IAM, and API Gateway. 
 
-## Note: 
-#### As is typical with AWS, there are many ways to carry out a project, but even so the documentation is usually very poor and partial, requiring a combination of working bits from many sources with lots of 'filling in the gaps' about required steps and details that were never mentioned. This documentation attempts to be 100% complete as a step by step guide.
+#### Note:  As is typical with AWS, there are many ways to carry out a project, but even so the documentation is usually very poor and partial, requiring a combination of working bits from many sources with lots of 'filling in the gaps' about required steps and details that were never mentioned. This documentation attempts to be 100% complete as a step by step guide.
 
 #  Sources
 Sources used for this documentation include:
 
-#### (Overall: an excellent resource)
-#### 1. https://www.youtube.com/watch?v=HNm6jU_AUbE
-#### AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change
+#### Source: AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change (Overall: an excellent resource)
+#### https://www.youtube.com/watch?v=HNm6jU_AUbE
 
-#### 2. Enabling a virtual multi-factor authentication (MFA) device (console) 
+#### Source: Enabling a virtual multi-factor authentication (MFA) device (console) 
 #### https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-iam-user 
 
-#### (Overally: pretty bad AWS documentation, better than usual)
-#### 2. New for AWS Lambda – Container Image Support, Danilo Poccia, DEC 2020
+#### Source: Deleting an ECR image
+#### https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html
+
+#### Source: New for AWS Lambda – Container Image Support, Danilo Poccia, DEC 2020 (Overally: pretty bad AWS documentation, better than usual)
 #### https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
 
-#### (Overall: horrible AWS documentation as usual)
-#### 3. Basic AWS Lambda Project Creating Docker Image
+#### Source: Basic AWS Lambda Project Creating Docker Image (Overall: horrible AWS documentation as usual)
 #### https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/lambda-creating-project-docker-image.html 
 
-#### (Overall, an OK resource using a different approach and more local resources)	
-#### 4. deploy serverless machine-learning-models to aws-lambda
+#### Source: deploy serverless machine-learning-models to aws-lambda (Overall, an OK resource using a different approach and more local resources)	
 #### https://www.udemy.com/course/deploy-serverless-machine-learning-models-to-aws-lambda/ 
 
-### (Focused on Python)
-#### 5. Deploy Python Lambda functions with container images (which sites the next following article)
+#### Source: Deploy Python Lambda functions with container images (which sites the next following article) (Focused on Python)
 #### https://docs.aws.amazon.com/lambda/latest/dg/python-image.html 
 
-#### 6. Create an image from an AWS base image for Lambda
+#### Source: Create an image from an AWS base image for Lambda
 #### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
 #### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
 
 
+#### Source: 
+https://www.docker.com/blog/containerized-python-development-part-1/
+
+
+
+# Best Practice
+Along with security, another best practice when using AWS is to delete any old items that you are finished with (in part to avoid being charged fees to keep them active in your account). Part of removing items can be clear naming of items: including a date-time in the title of your item can make it easy to see what you are deleting. Some resources for AWS are free or very cheap, but it is best practice to not leave old items around, especially if you may be paying for something you will never use again. 
 
 # AWS Services Used: 
 This project uses the following AWS services. (Your projects may use more services. Note: You may need to use multiple permission-groups as each group can only have a limited number of permissions.)
@@ -62,6 +77,15 @@ This project uses the following AWS services. (Your projects may use more servic
 - AWS Lambda: docker container upload method
 - S3: for file storage, including models, containers, etc.
 - IAM: for roles/users/groups that can access and use the AWS services
+
+### Setup:
+Windows that you may want to have open:
+- https://console.aws.amazon.com/console/ 
+- https://console.aws.amazon.com/cloud9/ 
+- https://console.aws.amazon.com/ecr/
+- https://console.aws.amazon.com/lambda/ 
+- https://console.aws.amazon.com/apigateway/ 
+
 
 # Steps to create, upload to and deploy python code in a Docker image on AWS with endpoint access:
 
@@ -100,7 +124,6 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtu
 - on your phone use an MFA application such as "Google Authenticator" https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US, follow the instructions, scan the QR code, etc. Easy setup. 
 
 
-
 ## Step: Start up a Cloud9 coding environment:
 - Go to aws
 - Go to services
@@ -125,6 +148,7 @@ IAM user login will need 3 items:
 - password
 #### Note: you will need to have those 12 digits on hand later when uploading the Docker image to AWS-ECR.
 
+
 ## Step: update container packages via terminal command: sudo yum update
 (Default linux is not updated, so you may need to update all packages. Though of course there is a chance that for your particular project you need to update only some packages.)
 - Note: yum vs. apt
@@ -141,11 +165,18 @@ $ sudo yum update
 $ pip install --upgrade pip
 ```
 
+#### Here is a cheatsheet code for steps that are explained individually below: here is a one-liner to set up the files structure you need:
+```
+$ mkdir app; cd app; touch app.py; touch Dockerfile; touch requirements.txt
+```
+
+
 ## Step: Create New Folder (Directory) for your project
-- create new folder called 
+- create new folder called "app"
+use GUI, or: command in the terminal: 
 ```
-app
-```
+$ mkdir app
+``` 
 
 
 ## Step: change directory (cd) your terminal into that new directory
@@ -202,16 +233,68 @@ def handler(event, context):
 - note: python vs. node.js, it may be possible to hybridize node.js and python workflows, if a project calls for both: https://www.npmjs.com/package/python 
 
 ## Step: install your packages, libraries, dependencies:
+TODO
 While this super-simple hello-world demo does not have any installed requirements, likely the whole point of using Docker+AWS-Lambda is that you need your python-lambda to have a set of required packages (and perhaps files) that otherwise would be infeasible or impossible to connect to a normal (non-docker) AWS Lambda. 
+```
+python3 -m pip install boto3
+pip install scikit-learn
+```
 
 ## Step: Create a file called "requirements.txt" to list your python requirements.
+Two ways to do this are to create one based on files already installed in your environment, or another way to do this is to simply manually write a requirements.txt doc yourself. 
+#### To make a doc based on python packages you have installed:
 - Run in a Terminal
 ```
 $ pip3 freeze > requirements.txt
 ```
 - Remove unneeded items: You may need to or want to Remove unneeded items from the list, perhaps consulting a venv  requirements.txt from a model or tool set in a local directory. 
 Based on the AWS documentation it appears that you need a requirements.txt file even if that file is empty, and that it only 'needs' to contain packages/libraries/dependencies that are required by you for your project.
-- 
+
+Here is an example of a requirements file for a project involving just sklearn (which is also called "scikit-learn" https://pypi.org/project/scikit-learn/ and AWS's boto3. The other libraries on this list are installed along with (mostly) sklearn. 
+```
+boto3==1.18.45
+botocore==1.21.45
+jmespath==0.10.0
+joblib==1.0.1
+numpy==1.21.2
+python-dateutil==2.8.2
+s3transfer==0.5.0
+scikit-learn==0.24.2
+scipy==1.7.1
+six==1.16.0
+threadpoolctl==2.2.0
+urllib3==1.26.7
+```
+#### Note: you can use this list without the version data (see below). Not-including-the-version-data will install current versions. Some projects will require specific older versions. 
+```
+boto3
+botocore
+jmespath
+joblib
+numpy
+python-dateutil
+s3transfer
+scikit-learn
+scipy
+six
+threadpoolctl
+urllib3
+```
+or
+```
+boto3
+scikit-learn
+```
+
+## Note: 
+#### The list of "installs you do" and the list of "installed" are not necessarily the same, and sometimes one will not work but the other will. E.g. All you need to install is "scikit-learn," which automatically includes installing other packages (which are then many 'installed' packages) but if you try to use the 'installed' package list as your requirements(to install), then everything will break. 
+
+#### Odd message from AWS. It says to use ENV but the docker steps don't describe how to do that. and...the terminal says I am using 21.2.4 and cannot upgrade...
+```
+WARNING: Running pip as root will break packages and permissions. You should install packages reliably by using venv: https://pip.pypa.io/warnings/venv
+WARNING: You are using pip version 21.1.1; however, version 21.2.4 is available.
+You should consider upgrading via the '/var/lang/bin/python3.8 -m pip install --upgrade pip' command.
+```
 
 
 #### Note: For the timestamp example used here, the only library needed, the only text needed in the requirements file is: "boto3" or the version used such as "boto3==1.18.44"
@@ -237,6 +320,7 @@ $ touch Dockerfile
 ```
 in the terminal to make the file.
 
+#### Note: The docker image does not automatically include all the files in the directory. You need to specify in the Dockerfile what files you want put where in the file docker container.
 
 ## Step: Add text to Dockerfile
 - double click on new file to open in editor (cloud9)
@@ -256,8 +340,54 @@ RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "app.handler" ]
 ```
+#### If you add files you may need to 
+```
+FROM public.ecr.aws/lambda/python:3.8
+
+# Copy function code
+COPY app.py ${LAMBDA_TASK_ROOT}
+
+# Copy serialized (pickled) model
+COPY your_model_name.joblib ${LAMBDA_TASK_ROOT}
+
+## Update pip
+# /var/lang/bin/python3.8 -m pip install --upgrade pip
+
+# Install the function's dependencies using file requirements.txt
+COPY requirements.txt  .
+RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+
+# Set the CMD to your "handler"
+CMD [ "app.handler" ]
+```
+
+#### The terminal will complain that you are not using venv (even though the aws documentation did not say to do so, or explain how to do so):
+```
+FROM public.ecr.aws/lambda/python:3.8
+
+# Copy function code
+COPY app.py ${LAMBDA_TASK_ROOT}
+
+# Copy serialized (pickled) model
+COPY your_model_name.joblib ${LAMBDA_TASK_ROOT}
+
+# Install the function's dependencies using file requirements.txt
+# from your project folder.
+
+COPY requirements.txt .
+RUN . /opt/venv/bin/activate && pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+RUN python3 -m venv /opt/venv
+
+# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+CMD [ "app.handler" ]
+```
+
 
 #### Note: Below, the name for this docker image project used here is hello-world. If you change that, changes in various steps of the process (names, commands, etc.) must also be changed. 
+
+
+## Tip Note:
+#### One recommendation is to make a simple test version of your application, one which does not take inputs but will simply output a sample output, so that you can test your docker container in Cloud9 without needing to take the time to install into lambda to test there.
 
 ## Step: Create Docker Image
 - Run this terminal command in the same directory(folder) that contains the Dockerfile:
@@ -314,6 +444,8 @@ $ docker tag hello-world:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/hel
 $ aws ecr get-login-password | docker login --username AWS --password-stdin 123412341234.dkr.ecr.us-east-1.amazonaws.com
 $ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
 ```
+#### Note: If you need to make a change to your files and re-upload, your best bet may be to delete your stored image from ECR e.g. https://console.aws.amazon.com/ecr/repositories?region=us-east-1 
+and repeat the above four terminal commands to send a fresh version to ECR
 
 ## Step: Make an AWS-Lambda-Function, follow these steps:
 - In a new browser tab go to a new AWS service: AWS Lambda https://console.aws.amazon.com/lambda/ 
@@ -330,6 +462,12 @@ $ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
 
 #### Note: You can change or update the docker-image assigned to a given lambda-function by using: image -> Deploy new image(button) (see pic)
 
+
+
+## Step: Best Practice: Delete old items from AWS
+When you are done using your ECR image, delete it using these instructions:
+#### Source: Deleting an ECR image
+#### https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html
 
 
 ## Step: Make an endpoint with AWS-API-gateway: Follow these steps:
@@ -350,10 +488,11 @@ $ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
 
 
 
-
-
-
-
 # Machine Learning Models
 Two of the main python tools for machine learning (related to each-other) are sklearn (also called SciKitLearn) and Tensorflow (TF) (and TFlite or Tensorflow Lite). There are many articles online that explain how they relate to each-other. For our purposes here: TFlite is very small, Tensorflow is small, and Sklearn is bigger. 
+
+
+## Runtime Note:
+#### The first time the container runs with sklearn it may take more seconds than then default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
+#### But then after it runs the first time it only takes a fraction of a second to run again.
 
