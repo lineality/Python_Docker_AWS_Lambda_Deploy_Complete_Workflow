@@ -425,12 +425,11 @@ CMD [ "app.handler" ]
 ```
 $ docker build -t hello-world .
 ```
-Note: if previous steps were not done in the correct terminal, then this won't work. 
-You should still be in the 
+#### Note: If previous steps were not done in the correct terminal, directory, etc., then this build will not work. 
 
 
-## Note: Next we will test out the docker image to make sure it works, which will require a few steps using the original terminal AND a new cloud9 terminal_2, which you will open.
-
+## Test Your Docker Image
+#### Note: Next we will test out the docker image to make sure it works, which will require a few steps using the original terminal AND a new cloud9 terminal_2, which you will open.
 
 ## Step: Run your Docker container:
 - (still in terminal_1) Run this code in terminal:
@@ -529,6 +528,7 @@ Two of the main python tools for machine learning (related to each-other) are sk
 ## Runtime Note:
 #### The first time the container runs with sklearn it may take more seconds (e.g. 5.1 seconds in one case) than the default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
 #### But then after it runs the first time it only takes a fraction of a second to run again.
+
 
 
 
