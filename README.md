@@ -1,15 +1,14 @@
-under construction
-
 # Python_Docker_AWS_Lambda_Deploy_Complete_Workflow
 The goal here is for this guide to be a complete guide through every step for deploying a python docker image (such as a machine learning model) via AWS (Amazon Web Services). This process is entirely done using AWS through the web-console (so no local software installations  needed on your local computer, no special computers, special operating systems, special system specs, special software etc. Any browser on any computer should work.), including the required best-practice-security steps for setting up users, groups and permissions. The code development environment for this project is AWS-Cloud9. Being able to deploy a Machine Learning Model with an endpoint for access is a basic requirement for many applied projects and research projects, yet clear and complete instructions for such a basic and required process are too difficult to find. Hopefully this guide will be helpful for students, researchers, business persons, administrators, etc. 
 
 #### Note: Like (fragile) python environments (which are often best created and discarded and recreated), the AWS process of docker deployment is buggy-glitchy, and prone to explode in random error messages. This makes interpretation of errors less clear. It is often best to try a process a few times completely from scratch when interpreting error messages (which often will be bugs and not problems with the code). 
 
 TODO
+- input test with pipupdate code and api endpoint
 	- see if TF container starts more quickly than sklearn
 	- see if alpine container starts more quickly than default
-- input test with pipupdate code and api endpoint
-	- new model...
+	- entirely new model...
+	- move into target AWS account
 
 - Experiments to run:
 		- try TFlite
@@ -153,6 +152,12 @@ IAM user login will need 3 items:
 - password
 #### Note: you will need to have those 12 digits on hand later when uploading the Docker image to AWS-ECR.
 
+## Quick Setup
+#### Here is a cheatsheet-code for steps that are explained individually below. As you may find yourself making and testing many many docker images over and over again (just like you will do with pip-environments for some projects) here is a one-liner to set up the files structure do check for updates you will need:
+```
+$ sudo yum update; mkdir app; cd app; touch app.py; touch Dockerfile; touch requirements.txt
+```
+
 
 ## Step: update container packages via terminal command: sudo yum update
 (Default linux is not updated, so you may need to update all packages. Though of course there is a chance that for your particular project you need to update only some packages.)
@@ -170,10 +175,7 @@ $ sudo yum update
 $ pip install --upgrade pip
 ```
 
-#### Here is a cheatsheet code for steps that are explained individually below: here is a one-liner to set up the files structure you need:
-```
-$ mkdir app; cd app; touch app.py; touch Dockerfile; touch requirements.txt
-```
+
 
 
 ## Step: Create New Folder (Directory) for your project
@@ -504,5 +506,7 @@ Two of the main python tools for machine learning (related to each-other) are sk
 ## Runtime Note:
 #### The first time the container runs with sklearn it may take more seconds (e.g. 5.1 seconds in one case) than the default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
 #### But then after it runs the first time it only takes a fraction of a second to run again.
+
+
 
 
