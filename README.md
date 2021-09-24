@@ -102,8 +102,7 @@ Windows that you may want to have open:
 
 #### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
 
-## Step: create (a root) AWS account
-https://console.aws.amazon.com/iamv2/home?#/users
+## Step: create (a root) AWS account https://console.aws.amazon.com/iamv2/home?#/users
 
 ## Step: create IAM user (not root)
 #### IAM user will need 3 items
@@ -129,13 +128,13 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtu
 - Sign in to the AWS Management Console and open the IAM console 
 - choose Users.
 - double click on blue name of the intended user.
-- Choose "Security credentials" tab. 
+- Choose the "Security credentials" tab. 
 - Next to Assigned MFA device, choose "Manage"
-- choose Virtual MFA device
-- on your phone use an MFA application such as "Google Authenticator" https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US, follow the instructions, scan the QR code, etc. Easy setup. 
+- Choose "Virtual MFA Device"
+- On your phone: Use an MFA application such as "Google Authenticator" https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US; follow the instructions, scan the QR code, etc. (Easy setup.)
 
 
-## Step: Start up a Cloud9 coding environment:
+## Step: Create a Cloud9 coding environment:
 - Go to aws
 - Go to services
 - Go to Cloud9
@@ -182,9 +181,6 @@ $ sudo yum update
 $ pip install --upgrade pip
 ```
 
-
-
-
 ## Step: Create New Folder (Directory) for your project
 - create new folder called "app"
 use GUI, or: command in the terminal: 
@@ -192,12 +188,10 @@ use GUI, or: command in the terminal:
 $ mkdir app
 ``` 
 
-
 ## Step: change directory (cd) your terminal into that new directory
 ```
 $ cd app
 ```
-
 
 ## Step: create new file (for python code) for your project:
 #### (note: if you are in the right directory, you can also make the new file by putting this command in the terminal: 
@@ -211,11 +205,15 @@ app.py
 ```
 
 
-## Step: Add your code into the python file. Note: because this is for AWS lambda, it will need all the code for a python-aws-lambda. The hello-world sample is very minimal. 
+## Step: Add your code into the python file. Note: because this is for AWS lambda, it will need all the code for a python-aws-lambda. The hello-world sample is very minimal. When you do this for the first time it is advisable to use a simple hello-world printing program, and gradually repeat the whole process using less-simple python programs: e.g.
+- 1st: print hello world
+- 2nd: use some kind of pip requirements (e.g. a date-time printout)
+- 3rd: do an actual machine learning docker with sklearn or TFlite and a premade simple model (but still that just prints out so you can test the docker easily)
+- etc.
 
 #### Note: make sure the 'app' folder(directory) in the GUI is selected to show what is inside, or you will not see what is inside.
 
-(type that in)
+#### Add your code to app.py
 - double click on new file to open in editor (cloud9)
 - paste in code;
 - This code prints a timestamp and tests out whether imported libraries are working.
@@ -256,6 +254,9 @@ pip install scikit-learn
 
 ## Step: Create a file called "requirements.txt" to list your python requirements.
 Two ways to do this are to create one based on files already installed in your environment, or another way to do this is to simply manually write a requirements.txt doc yourself. 
+
+#### You may want to separate your process of setting up your project and files, designing what packages you need, etc. vs. the process of creating and uploading your docker-image. For example, if you are just uploading a docker image then you will not actually be installing any pip packages in your cloud9 ide (most likely). 
+
 #### To make a doc based on python packages you have installed:
 - Run in a Terminal
 ```
@@ -320,6 +321,8 @@ It may be that this is AWS's inexplicably obscure way of saying: files you need 
 
 
 ## Step: Create Dockerfile
+#### As with other processes, you may want to start with a most-simple-docker-method and gradually find fancier methods that suit your projects. 
+
 Create a new file for your project.
 - right click in your ''app' folder and select': new file
 - file name: 
@@ -513,5 +516,6 @@ Two of the main python tools for machine learning (related to each-other) are sk
 ## Runtime Note:
 #### The first time the container runs with sklearn it may take more seconds (e.g. 5.1 seconds in one case) than the default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
 #### But then after it runs the first time it only takes a fraction of a second to run again.
+
 
 
