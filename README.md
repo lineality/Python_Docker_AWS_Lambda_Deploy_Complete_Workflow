@@ -4,9 +4,14 @@ The goal here is for this guide to be a complete guide through every step for de
 #### Note: Like (fragile) python environments (which are often best created and discarded and recreated), the AWS process of docker deployment is buggy-glitchy, and prone to explode in random error messages. This makes interpretation of errors less clear. It is often best to try a process a few times completely from scratch when interpreting error messages (which often will be bugs and not problems with the code). 
 
 TODO
-	- Experiments to run:
+	- see if TF container starts more quickly than sklearn
+	- see if alpine container starts more quickly than default
+- input test with pipupdate code and api endpoint
+	- new model...
+
+- Experiments to run:
 		- try TFlite
-		- try venv
+
 		- try import pre-made env
 			- Try mini-test with simple script and libraries etc.
 		- try script 
@@ -61,9 +66,7 @@ Sources used for this documentation include:
 #### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
 #### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
 
-
-#### Source: 
-https://www.docker.com/blog/containerized-python-development-part-1/
+#### Source: Containerized Python Development – Part 1  https://www.docker.com/blog/containerized-python-development-part-1/
 
 
 
@@ -488,11 +491,16 @@ When you are done using your ECR image, delete it using these instructions:
 
 
 
+
+
+
+
 # Machine Learning Models
 Two of the main python tools for machine learning (related to each-other) are sklearn (also called SciKitLearn) and Tensorflow (TF) (and TFlite or Tensorflow Lite). There are many articles online that explain how they relate to each-other. For our purposes here: TFlite is very small, Tensorflow is small, and Sklearn is bigger. 
 
 
 ## Runtime Note:
-#### The first time the container runs with sklearn it may take more seconds than then default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
+#### The first time the container runs with sklearn it may take more seconds (e.g. 5.1 seconds in one case) than the default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
 #### But then after it runs the first time it only takes a fraction of a second to run again.
+
 
