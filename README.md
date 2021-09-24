@@ -353,14 +353,13 @@ If you follow the AWS docs Dockerfile, you will get a warning that pip should be
 FROM public.ecr.aws/lambda/python:3.8
 
 ## Update pip
-# /var/lang/bin/python3.8 -m pip install --upgrade pip
+RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip
+#RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip --target "${LAMBDA_TASK_ROOT}"
 
 # Copy function code
 COPY app.py ${LAMBDA_TASK_ROOT}
 
 # Install the function's dependencies using file requirements.txt
-# from your project folder.
-
 COPY requirements.txt  .
 RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 
@@ -378,7 +377,8 @@ COPY app.py ${LAMBDA_TASK_ROOT}
 COPY your_model_name.joblib ${LAMBDA_TASK_ROOT}
 
 ## Update pip
-# /var/lang/bin/python3.8 -m pip install --upgrade pip
+RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip
+#RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip --target "${LAMBDA_TASK_ROOT}"
 
 # Install the function's dependencies using file requirements.txt
 COPY requirements.txt  .
@@ -418,6 +418,8 @@ CMD [ "app.handler" ]
 #### One recommendation is to make a simple test version of your application, one which does not take inputs but will simply output a sample output, so that you can test your docker container in Cloud9 without needing to take the time to install into lambda to test there.
 
 ## Step: Create Docker Image
+#### Note, again, it is advisable to treat this whole cloud9 process as build-once-disposable part of your process. If you try to run this docker-build command more than once it will likely generate more and more errors. Recommended: only run build once. Make a new cloud9 to build again. 
+
 - Run this terminal command in the same directory(folder) that contains the Dockerfile:
 - Type this into the terminal (with the trailing space and period included)
 ```
