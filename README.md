@@ -340,10 +340,20 @@ in the terminal to make the file.
 #### Note: The docker image does not automatically include all the files in the directory. You need to specify in the Dockerfile what files you want put where in the file docker container.
 
 ## Step: Add text to Dockerfile
+#### This first example adds one part to the default-aws-dockerfile script: updating pip
+If you follow the AWS docs Dockerfile, you will get a warning that pip should be upgraded. This addition 'fixes' that. 
+```
+## Update pip
+# /var/lang/bin/python3.8 -m pip install --upgrade pip
+```
+
 - double click on new file to open in editor (cloud9)
 - paste in code: (Example working Dockerfile code from AWS docs, this code works):
 ```
 FROM public.ecr.aws/lambda/python:3.8
+
+## Update pip
+# /var/lang/bin/python3.8 -m pip install --upgrade pip
 
 # Copy function code
 COPY app.py ${LAMBDA_TASK_ROOT}
@@ -399,6 +409,7 @@ RUN python3 -m venv /opt/venv
 CMD [ "app.handler" ]
 ```
 
+#### TODO: Using venv in docker
 
 #### Note: Below, the name for this docker image project used here is hello-world. If you change that, changes in various steps of the process (names, commands, etc.) must also be changed. 
 
