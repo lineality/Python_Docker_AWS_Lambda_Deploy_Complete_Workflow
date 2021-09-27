@@ -2,11 +2,22 @@ under construction
 
 ```
 TODO
-- input test with pipupdate code and api endpoint
-	- see if TF container starts more quickly than sklearn
-	- see if alpine container starts more quickly than default
+	- test: uploading env to docker...
+	- test: adding (copy?) directory to docker
+- best way to move a folder
+	- copy folder?
+	- zip and move object then unzip?
+	- 
+- input test 
+
+	- see if alpine container starts more quickly than default?
 	- entirely new model...
 	- move into target AWS account
+	
+	- maybe section on TF-lite and find way to use TF-docker by adding aws interface to it?
+	- or...
+
+
 
 - Experiments to run:
 		- try TFlite
@@ -76,7 +87,8 @@ Sources used for this documentation include:
 
 #### Source: Containerized Python Development – Part 1  https://www.docker.com/blog/containerized-python-development-part-1/
 
-
+#### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
+https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
 
 # Best Practice
 Along with security, another best practice when using AWS is to delete any old items that you are finished with (in part to avoid being charged fees to keep them active in your account). Part of removing items can be clear naming of items: including a date-time in the title of your item can make it easy to see what you are deleting. Some resources for AWS are free or very cheap, but it is best practice to not leave old items around, especially if you may be paying for something you will never use again. 
@@ -240,6 +252,59 @@ def handler(event, context):
 ```
 #### and more here: https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
 
+### Sample Code for sklearn prediction and imported model
+```
+import json
+from joblib import dump, load
+import boto3
+ 
+"""
+only joblib is needed to import
+but sklearn (scikit-learn) must be installed
+"""
+ 
+def handler(event, context):
+ 
+   ##################
+   # read the inputs
+   ##################
+   try:
+       input_value = float(event["input_value"])
+ 
+       # inspection
+       print("input format ok")
+ 
+   except (Exception) as error:  # Failure!!
+       output = (f"""Error: There was an input format problem:
+               input_value is a number. {error} \n""")
+       # inspection
+       print(error)
+ 
+ 
+   ##############################
+   # Load Machine Learning Model
+   ##############################
+   # load the picked/serialized ML model into the system
+   regresssion_model_sklearn = load('your_model_name.joblib')
+   # regresssion_model_sklearn_1 = load( response['Body'] )
+  
+   ##################
+   # make prediction
+   ##################
+   prediction = regresssion_model_sklearn.predict([[ input_value ]])
+  
+   # format output json object
+   output = {}
+   output["model_prediction"] = str(prediction)
+  
+   return {
+       'statusCode': 200,
+       'body': json.dumps(output)
+   }
+
+```
+
+
 #### Note: lambda_handler vs. handler: The normal code for a python lambda (AWS) is that the function needs to be called "lambda_handler" but it appears that when AWS-Lambda is using a docker-image, the name of the function must be "handler"
 
 - note: python vs. node.js, it may be possible to hybridize node.js and python workflows, if a project calls for both: https://www.npmjs.com/package/python 
@@ -266,36 +331,6 @@ $ pip3 freeze > requirements.txt
 Based on the AWS documentation it appears that you need a requirements.txt file even if that file is empty, and that it only 'needs' to contain packages/libraries/dependencies that are required by you for your project.
 
 Here is an example of a requirements file for a project involving just sklearn (which is also called "scikit-learn" https://pypi.org/project/scikit-learn/ and AWS's boto3. The other libraries on this list are installed along with (mostly) sklearn. 
-```
-boto3==1.18.45
-botocore==1.21.45
-jmespath==0.10.0
-joblib==1.0.1
-numpy==1.21.2
-python-dateutil==2.8.2
-s3transfer==0.5.0
-scikit-learn==0.24.2
-scipy==1.7.1
-six==1.16.0
-threadpoolctl==2.2.0
-urllib3==1.26.7
-```
-#### Note: you can use this list without the version data (see below). Not-including-the-version-data will install current versions. Some projects will require specific older versions. 
-```
-boto3
-botocore
-jmespath
-joblib
-numpy
-python-dateutil
-s3transfer
-scikit-learn
-scipy
-six
-threadpoolctl
-urllib3
-```
-or
 ```
 boto3
 scikit-learn
@@ -340,7 +375,7 @@ in the terminal to make the file.
 #### Note: The docker image does not automatically include all the files in the directory. You need to specify in the Dockerfile what files you want put where in the file docker container.
 
 ## Step: Add text to Dockerfile
-#### This first example adds one part to the default-aws-dockerfile script: updating pip
+#### Note: This first example adds one part to the default-aws-dockerfile script: updating pip
 If you follow the AWS docs Dockerfile, you will get a warning that pip should be upgraded. This addition 'fixes' that. 
 ```
 ## Update pip
@@ -366,7 +401,7 @@ RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "app.handler" ]
 ```
-#### If you add files you may need to 
+#### If you add files:
 ```
 FROM public.ecr.aws/lambda/python:3.8
 
@@ -378,7 +413,6 @@ COPY your_model_name.joblib ${LAMBDA_TASK_ROOT}
 
 ## Update pip
 RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip
-#RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip --target "${LAMBDA_TASK_ROOT}"
 
 # Install the function's dependencies using file requirements.txt
 COPY requirements.txt  .
@@ -388,28 +422,8 @@ RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 CMD [ "app.handler" ]
 ```
 
-#### The terminal will complain that you are not using venv (even though the aws documentation did not say to do so, or explain how to do so):
-```
-FROM public.ecr.aws/lambda/python:3.8
 
-# Copy function code
-COPY app.py ${LAMBDA_TASK_ROOT}
-
-# Copy serialized (pickled) model
-COPY your_model_name.joblib ${LAMBDA_TASK_ROOT}
-
-# Install the function's dependencies using file requirements.txt
-# from your project folder.
-
-COPY requirements.txt .
-RUN . /opt/venv/bin/activate && pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
-RUN python3 -m venv /opt/venv
-
-# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
-CMD [ "app.handler" ]
-```
-
-#### TODO: Using venv in docker
+#### TODO: Using venv in docker?
 
 #### Note: Below, the name for this docker image project used here is hello-world. If you change that, changes in various steps of the process (names, commands, etc.) must also be changed. 
 
@@ -498,6 +512,11 @@ When you are done using your ECR image, delete it using these instructions:
 #### Source: Deleting an ECR image
 #### https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html
 
+## Naming
+#### Naming files, directories(folders) and variables in common-sense ways that will make sense to future-you and other people is a create best-practice to follow. e.g.
+```
+py-docker-test-2021-09-24-1251-cloud9
+```
 
 ## Step: Make an endpoint with AWS-API-gateway: Follow these steps:
 - go to another aws service, api-gateway: https://console.aws.amazon.com/apigateway
@@ -522,13 +541,10 @@ When you are done using your ECR image, delete it using these instructions:
 
 
 # Machine Learning Models
-Two of the main python tools for machine learning (related to each-other) are sklearn (also called SciKitLearn) and Tensorflow (TF) (and TFlite or Tensorflow Lite). There are many articles online that explain how they relate to each-other. For our purposes here: TFlite is very small, Tensorflow is small, and Sklearn is bigger. 
+Two of the main python tools for machine learning (related to each-other) are sklearn (also called SciKitLearn) and Tensorflow (TF) (and TFlite or Tensorflow Lite). There are many articles online that explain how they relate to each-other. For our purposes here: TFlite is very small, Tensorflow is small, and Sklearn is bigger. As yet, I cannot recommend a way to use Tensorflow with AWS - work in progress.
 
 
 ## Runtime Note:
 #### The first time the container runs with sklearn it may take more seconds (e.g. 5.1 seconds in one case) than the default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
 #### But then after it runs the first time it only takes a fraction of a second to run again.
-
-
-
 
