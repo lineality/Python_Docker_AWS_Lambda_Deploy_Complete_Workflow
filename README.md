@@ -2,6 +2,7 @@ under construction
 
 ```
 TODO
+	- may be link to a git for making an serializing a basic model in sklearn
 	- test: uploading env to docker...
 	- test: adding (copy?) directory to docker
 - best way to move a folder
@@ -48,50 +49,8 @@ https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support
 # Python_Docker_AWS_Lambda_Deploy_Complete_Workflow
 The goal here is for this guide to be a complete guide through every step for deploying a python docker image (such as a machine learning model) via AWS (Amazon Web Services). This process is entirely done using AWS through the web-console (so no local software installations  needed on your local computer, no special computers, special operating systems, special system specs, special software etc. Any browser on any computer should work.), including the required best-practice-security steps for setting up users, groups and permissions. The code development environment for this project is AWS-Cloud9. Being able to deploy a Machine Learning Model with an endpoint for access is a basic requirement for many applied projects and research projects, yet clear and complete instructions for such a basic and required process are too difficult to find. Hopefully this guide will be helpful for students, researchers, business persons, administrators, etc. 
 
-#### Note: Like (fragile) python environments (which are often best created and discarded and recreated), the AWS process of docker deployment is buggy-glitchy, and prone to explode in random error messages. This makes interpretation of errors less clear. It is often best to try a process a few times completely from scratch when interpreting error messages (which often will be bugs and not problems with the code). 
-
-
-
 # Overall Description:
 #### Using only AWS tools via web (no local software installs needed), deploy Machine Learning models to AWS Lambda for an external (or internal) restful-API-endpoint by uploading a Docker container to AWS-Lambda using Cloud9, S3, AWS Lambda, IAM, and API Gateway. 
-
-#### Note:  As is typical with AWS, there are many ways to carry out a project, but even so the documentation is usually very poor and partial, requiring a combination of working bits from many sources with lots of 'filling in the gaps' about required steps and details that were never mentioned. This documentation attempts to be 100% complete as a step by step guide.
-
-#  Sources
-Sources used for this documentation include:
-
-#### Source: AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change (Overall: an excellent resource)
-#### https://www.youtube.com/watch?v=HNm6jU_AUbE
-
-#### Source: Enabling a virtual multi-factor authentication (MFA) device (console) 
-#### https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-iam-user 
-
-#### Source: Deleting an ECR image
-#### https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html
-
-#### Source: New for AWS Lambda – Container Image Support, Danilo Poccia, DEC 2020 (Overally: pretty bad AWS documentation, better than usual)
-#### https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
-
-#### Source: Basic AWS Lambda Project Creating Docker Image (Overall: horrible AWS documentation as usual)
-#### https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/lambda-creating-project-docker-image.html 
-
-#### Source: deploy serverless machine-learning-models to aws-lambda (Overall, an OK resource using a different approach and more local resources)	
-#### https://www.udemy.com/course/deploy-serverless-machine-learning-models-to-aws-lambda/ 
-
-#### Source: Deploy Python Lambda functions with container images (which sites the next following article) (Focused on Python)
-#### https://docs.aws.amazon.com/lambda/latest/dg/python-image.html 
-
-#### Source: Create an image from an AWS base image for Lambda
-#### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
-#### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
-
-#### Source: Containerized Python Development – Part 1  https://www.docker.com/blog/containerized-python-development-part-1/
-
-#### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
-https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
-
-# Best Practice
-Along with security, another best practice when using AWS is to delete any old items that you are finished with (in part to avoid being charged fees to keep them active in your account). Part of removing items can be clear naming of items: including a date-time in the title of your item can make it easy to see what you are deleting. Some resources for AWS are free or very cheap, but it is best practice to not leave old items around, especially if you may be paying for something you will never use again. 
 
 # AWS Services Used: 
 This project uses the following AWS services. (Your projects may use more services. Note: You may need to use multiple permission-groups as each group can only have a limited number of permissions.)
@@ -100,6 +59,40 @@ This project uses the following AWS services. (Your projects may use more servic
 - AWS Lambda: docker container upload method
 - S3: for file storage, including models, containers, etc.
 - IAM: for roles/users/groups that can access and use the AWS services
+
+# Overall Workflow Outline:
+1. Log into appropriate AWS account (set up account and permissions if need be)
+2. Set up files in (AWS)Cloud9 editor/IDE
+3. Make a docker image
+4. Test Docker image
+5. Deploy Docker to storage in AWS (ECR)
+6. Add Docker Image to (AWS)Lambda
+7. Add endpoint with (AWS)API-Gateway
+
+# Tips and Notes:
+
+## DO make a new one. DON'T modify an old one.
+#### As a rule of thumb: DO make a new one. DON'T modify an old one.
+
+Like (fragile) python environments (which are best discarded and then recreated rather than tinkered with), the AWS process of docker deployment is buggy-glitchy, and prone to explode in random error messages. This makes interpretation of errors less clear. It is often best to try a process a few times completely from scratch when interpreting error messages (which often will be bugs and not problems with the code). Even the AWS Lambda, in theory you can add new images to an old Lambda, but in reality the changes of creating some strange and misleading error that a clean-build will not generate is too high. Even within cloud9: sometimes the terminals go buggy and you need to close and then open new terminal just to run a command. For a more enlightened future, we can all code well today so that future-people are not drowning in a sea of broken code garbage. Until that utopia comes about, the code we have explodes for any or no reason: so keep your process clean. 
+
+#### Note:  As is typical with AWS, there are many ways to carry out a project, but even so the documentation is usually very poor and partial, requiring a combination of working bits from many sources with lots of 'filling in the gaps' about required steps and details that were never mentioned. This documentation attempts to be 100% complete as a step by step guide.
+
+# Best Practice
+Along with security, another best practice when using AWS is to delete any old items that you are finished with (in part to avoid being charged fees to keep them active in your account). Part of removing items can be clear naming of items: including a date-time in the title of your item can make it easy to see what you are deleting. Some resources for AWS are free or very cheap, but it is best practice to not leave old items around, especially if you may be paying for something you will never use again. 
+
+## Naming
+#### Naming files, directories(folders) and variables in common-sense ways that will make sense to future-you and other people is a create best-practice to follow. e.g.
+```
+py-docker-test-2021-09-24-1251-cloud9
+```
+
+#### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
+
+- Note: yum vs. apt
+AWS Linux2 uses a YUM package manager, as does redhat, fedora, etc. 
+NOT like debian, ubuntu etc (which uses apt)	
+To update EC2 container, run this code IN TERMINAL at bottom of interface 
 
 ### Setup:
 Windows that you may want to have open:
@@ -110,9 +103,8 @@ Windows that you may want to have open:
 - https://console.aws.amazon.com/apigateway/ 
 
 
-# Steps to create, upload to and deploy python code in a Docker image on AWS with endpoint access:
-
-#### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
+# Follow these steps 
+## To create, upload to and deploy python code in a Docker image on AWS with endpoint access:
 
 ## Step: create (a root) AWS account https://console.aws.amazon.com/iamv2/home?#/users
 
@@ -146,7 +138,16 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtu
 - On your phone: Use an MFA application such as "Google Authenticator" https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US; follow the instructions, scan the QR code, etc. (Easy setup.)
 
 
-## Step: Create a Cloud9 coding environment:
+## Step: log into aws console using the role you just created:
+IAM user login will need 3 items:
+- 12 digit account number
+- user name
+- password
+#### Note: you will need to have those 12 digits on hand later when uploading the Docker image to AWS-ECR.
+
+
+## Step: Create a Cloud9 coding environment 
+#### You can use the default options.
 - Go to aws
 - Go to services
 - Go to Cloud9
@@ -163,58 +164,23 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtu
 - review specs and hit Create Environment (button)
 
 
-## Step: log into aws console using the role you just created:
-IAM user login will need 3 items:
-- 12 digit account number
-- user name
-- password
-#### Note: you will need to have those 12 digits on hand later when uploading the Docker image to AWS-ECR.
-
-## Quick Setup
+## Set up your Cloud9 editor:
 #### Here is a cheatsheet-code for steps that are explained individually below. As you may find yourself making and testing many many docker images over and over again (just like you will do with pip-environments for some projects) here is a one-liner to set up the files structure do check for updates you will need:
+- Update container packages via terminal command: $ sudo yum update
+#### You may need to enter 'Y' to install updates if there are any.
+- Update pip (the python package manager): $ pip install --upgrade pip
+- Create New Folder (Directory) for your project: $ mkdir app
+- Change directory (cd) your terminal into that new directory: $ cd app
+- Create new file (for python code) for your project: $ touch app.py
+
+### Here is a one-liner to carry out the above steps all together (or you can manually do each separately):
 ```
 $ sudo yum update; mkdir app; cd app; touch app.py; touch Dockerfile; touch requirements.txt
 ```
 
+#### See pic of what your file structure should look like:
+#### Note: click on the new app folder (directory) to show what is inside.
 
-## Step: update container packages via terminal command: sudo yum update
-(Default linux is not updated, so you may need to update all packages. Though of course there is a chance that for your particular project you need to update only some packages.)
-- Note: yum vs. apt
-AWS Linux2 uses a YUM package manager, as does redhat, fedora, etc. 
-NOT like debian, ubuntu etc (which uses apt)	
-To update EC2 container, run this code IN TERMINAL at bottom of interface 
-```
-$ sudo yum update 
-```
-- Type in Y or Yes to instal any updates.
-#### Note:  The Cloud9 terminal uses control-v not control-shift-v to paste.
-- update pip (the python package manager):
-```
-$ pip install --upgrade pip
-```
-
-## Step: Create New Folder (Directory) for your project
-- create new folder called "app"
-use GUI, or: command in the terminal: 
-```
-$ mkdir app
-``` 
-
-## Step: change directory (cd) your terminal into that new directory
-```
-$ cd app
-```
-
-## Step: create new file (for python code) for your project:
-#### (note: if you are in the right directory, you can also make the new file by putting this command in the terminal: 
-```
-touch app.py
-```
-- Right click in your ''app' folder and select': new file
-- file name: either way, there should be a new file in the directory(folder) that has this name:
-```
-app.py 
-```
 
 
 ## Step: Add your code into the python file. Note: because this is for AWS lambda, it will need all the code for a python-aws-lambda. The hello-world sample is very minimal. When you do this for the first time it is advisable to use a simple hello-world printing program, and gradually repeat the whole process using less-simple python programs: e.g.
@@ -252,6 +218,41 @@ def handler(event, context):
 ```
 #### and more here: https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
 
+### Sample TEST Code for sklearn prediction and imported model with with terminal output for testing in cloud9 terminal (without needing to use ECR & aws-Lambda to test)
+```
+import json
+from joblib import dump, load
+import boto3
+ 
+"""
+only joblib is needed to import
+but sklearn (scikit-learn) must be installed
+"""
+ 
+def handler(event, context):
+ 
+   ##############################
+   # Load Machine Learning Model
+   ##############################
+   # load the picked/serialized ML model into the system
+   regresssion_model_sklearn = load('your_model_name.joblib')
+   # regresssion_model_sklearn_1 = load( response['Body'] )
+  
+   ##################
+   # make prediction
+   ##################
+   prediction = regresssion_model_sklearn.predict([[ 5 ]])
+  
+   # format output json object
+   output = {}
+   output["model_prediction"] = str(prediction)
+  
+   return {
+       'statusCode': 200,
+       'body': json.dumps(output)
+   }
+
+```
 ### Sample Code for sklearn prediction and imported model
 ```
 import json
@@ -401,7 +402,7 @@ RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "app.handler" ]
 ```
-#### If you add files:
+#### If you add files such as a serialized (pickled) model:
 ```
 FROM public.ecr.aws/lambda/python:3.8
 
@@ -428,6 +429,16 @@ CMD [ "app.handler" ]
 #### Note: Below, the name for this docker image project used here is hello-world. If you change that, changes in various steps of the process (names, commands, etc.) must also be changed. 
 
 
+
+## Step: upload your model, if you have one:
+#### drag you local model file to the specific folder (not into the void of space in the side panel)
+#### or use menu options to upload:
+
+
+#### After selecting upload files from the files-menu, drag files into the pop-up box (see pic)
+
+
+
 ## Tip Note:
 #### One recommendation is to make a simple test version of your application, one which does not take inputs but will simply output a sample output, so that you can test your docker container in Cloud9 without needing to take the time to install into lambda to test there.
 
@@ -439,11 +450,16 @@ CMD [ "app.handler" ]
 ```
 $ docker build -t hello-world .
 ```
+#### Check the output of this to make sure the build works completely. You will likely get some pip-warnings no matter what you do, I think you can ignore those. At the end it should say:
+```
+Successfully built ...
+Successfully tagged hello-world:latest
+```
+
 #### Note: If previous steps were not done in the correct terminal, directory, etc., then this build will not work. 
 
-
-## Test Your Docker Image
-#### Note: Next we will test out the docker image to make sure it works, which will require a few steps using the original terminal AND a new cloud9 terminal_2, which you will open.
+## Now Test Your Docker Image
+#### Before deploying and using your docker image, you will want to test it to make sure it (or a test-version of it) works. Next we will test out the docker image to make sure it works, which will require a few steps using the original terminal AND a new cloud9 terminal_2, which you will open.
 
 ## Step: Run your Docker container:
 - (still in terminal_1) Run this code in terminal:
@@ -452,6 +468,7 @@ $ docker run -p 9000:8080 hello-world:latest
 ```
 
 ## Step: Open a NEW second terminal (here called "terminal_2")
+
 - select plus symbol (green) in the terminal section at the bottom of GUI
 - select 'New Terminal'; a "terminal_2"should now exist
 
@@ -507,16 +524,21 @@ and repeat the above four terminal commands to send a fresh version to ECR
 
 
 
+
+
+
+## Edit your Lambda: Make Timeout longer
+
+
+
+
+
 ## Step: Best Practice: Delete old items from AWS
 When you are done using your ECR image, delete it using these instructions:
 #### Source: Deleting an ECR image
 #### https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html
 
-## Naming
-#### Naming files, directories(folders) and variables in common-sense ways that will make sense to future-you and other people is a create best-practice to follow. e.g.
-```
-py-docker-test-2021-09-24-1251-cloud9
-```
+
 
 ## Step: Make an endpoint with AWS-API-gateway: Follow these steps:
 - go to another aws service, api-gateway: https://console.aws.amazon.com/apigateway
@@ -547,4 +569,39 @@ Two of the main python tools for machine learning (related to each-other) are sk
 ## Runtime Note:
 #### The first time the container runs with sklearn it may take more seconds (e.g. 5.1 seconds in one case) than the default time limit, which you can reset to longer in: configuration-> general configuration -> edit -> timeout -> set to 1 minute. 
 #### But then after it runs the first time it only takes a fraction of a second to run again.
+
+
+#  Sources
+Sources used for this documentation are listed at the end of the document.
+
+#### Source: AWS reInvent 2020 Run Lambda with Container Image | Tutorial & DEMO | Lambda and Kubernetes Dec 3, 2020 Agent of Change (Overall: an excellent resource)
+#### https://www.youtube.com/watch?v=HNm6jU_AUbE
+
+#### Source: Enabling a virtual multi-factor authentication (MFA) device (console) 
+#### https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-iam-user 
+
+#### Source: Deleting an ECR image
+#### https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html
+
+#### Source: New for AWS Lambda – Container Image Support, Danilo Poccia, DEC 2020 (Overally: pretty bad AWS documentation, better than usual)
+#### https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
+
+#### Source: Basic AWS Lambda Project Creating Docker Image (Overall: horrible AWS documentation as usual)
+#### https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/lambda-creating-project-docker-image.html 
+
+#### Source: deploy serverless machine-learning-models to aws-lambda (Overall, an OK resource using a different approach and more local resources)	
+#### https://www.udemy.com/course/deploy-serverless-machine-learning-models-to-aws-lambda/ 
+
+#### Source: Deploy Python Lambda functions with container images (which sites the next following article) (Focused on Python)
+#### https://docs.aws.amazon.com/lambda/latest/dg/python-image.html 
+
+#### Source: Create an image from an AWS base image for Lambda
+#### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html 
+#### https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-create-from-base
+
+#### Source: Containerized Python Development – Part 1  https://www.docker.com/blog/containerized-python-development-part-1/
+
+#### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
+https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
+
 
