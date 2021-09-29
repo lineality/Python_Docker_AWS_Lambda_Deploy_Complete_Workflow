@@ -3,6 +3,8 @@ under construction
 ```
 TODO
 	- may be link to a git for making an serializing a basic model in sklearn
+	- try using environment variables in docker to use venv-env...
+	https://bobcares.com/blog/activate-python-virtualenv-in-dockerfile/ 
 	- test: uploading env to docker...
 	- test: adding (copy?) directory to docker
 - best way to move a folder
