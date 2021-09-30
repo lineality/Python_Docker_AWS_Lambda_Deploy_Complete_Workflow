@@ -232,6 +232,7 @@ def handler(event, context):
 
 ### Sample TEST Code for sklearn prediction and imported model with with terminal output for testing in cloud9 terminal (without needing to use ECR & aws-Lambda to test)
 ```
+# for testing
 import json
 from joblib import dump, load
 import boto3
@@ -616,4 +617,5 @@ Sources used for this documentation are listed at the end of the document.
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
 
+...........................................................................
 
