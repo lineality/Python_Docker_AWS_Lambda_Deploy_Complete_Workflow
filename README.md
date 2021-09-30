@@ -47,6 +47,11 @@ https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support
 		- format of requirements file?
 ```
 
+### This article/resource is one in a series of inter-related topics (for creating, deploying, maintaining, and collaborating around, Machine Learning and data science models and analysis):
+1. Model Development Workflow
+2. Model Documentation
+3. Model Deployment 
+#### The topic here is Model Deployment 
 
 # Python_Docker_AWS_Lambda_Deploy_Complete_Workflow
 The goal here is for this guide to be a complete guide through every step for deploying a python docker image (such as a machine learning model) via AWS (Amazon Web Services). This process is entirely done using AWS through the web-console (so no local software installations  needed on your local computer, no special computers, special operating systems, special system specs, special software etc. Any browser on any computer should work.), including the required best-practice-security steps for setting up users, groups and permissions. The code development environment for this project is AWS-Cloud9. Being able to deploy a Machine Learning Model with an endpoint for access is a basic requirement for many applied projects and research projects, yet clear and complete instructions for such a basic and required process are too difficult to find. Hopefully this guide will be helpful for students, researchers, business persons, administrators, etc. 
@@ -85,8 +90,13 @@ Along with security, another best practice when using AWS is to delete any old i
 
 ## Naming
 #### Naming files, directories(folders) and variables in common-sense ways that will make sense to future-you and other people is a create best-practice to follow. e.g.
+- initials of person who made it: gga
+- what aws service it is: cloud9
+- date-time: 2021-09-24-1251
+- use/purpose of item: py-docker-test
 ```
-py-docker-test-2021-09-24-1251-cloud9
+# Sample file name:
+gga-py-docker-test-2021-09-24-1251-cloud9
 ```
 
 #### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
