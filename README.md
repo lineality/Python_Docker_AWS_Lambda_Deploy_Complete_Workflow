@@ -447,7 +447,8 @@ $ docker build -t hello-world .
 ```
 #### Check the output of this to make sure the build works completely. You will likely get some pip-warnings no matter what you do, I think you can ignore those. At the end it should say:
 ```
-Successfully built ...
+.....
+Successfully built ###########
 Successfully tagged hello-world:latest
 ```
 
