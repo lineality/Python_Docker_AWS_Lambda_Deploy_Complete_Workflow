@@ -386,7 +386,6 @@ FROM public.ecr.aws/lambda/python:3.8
 
 ## Update pip
 RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip
-#RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip --target "${LAMBDA_TASK_ROOT}"
 
 # Copy function code
 COPY app.py ${LAMBDA_TASK_ROOT}
@@ -599,6 +598,5 @@ Sources used for this documentation are listed at the end of the document.
 
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
-
 
 
