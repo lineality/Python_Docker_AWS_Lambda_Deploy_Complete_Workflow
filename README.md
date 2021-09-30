@@ -137,6 +137,7 @@ Windows that you may want to have open:
 - s3 
 - AmazonEC2ContainerRegistryFullAccess (Elastic Container Registry)
 
+
 ## Step: Setup MFA for User
 #### For long-term more-secure AWS login, set up MFA (Multi Factor Authentication) for the AWS user: The AWS Docs for this are actually accurate and useful.
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-iam-user
@@ -148,6 +149,10 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtu
 - Next to Assigned MFA device, choose "Manage"
 - Choose "Virtual MFA Device"
 - On your phone: Use an MFA application such as "Google Authenticator" https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US; follow the instructions, scan the QR code, etc. (Easy setup.)
+
+
+## Step: add aws cloud9 to chrome browser 3rd party cookies
+#### If using the chrome browser, you may need to add "https://console.aws.amazon.com/" to the list of all cookies allowed domains. settings -> cookies -> add whitelist 3rd party etc.
 
 
 ## Step: log into aws console using the role you just created:
@@ -265,7 +270,7 @@ def handler(event, context):
        'body': json.dumps(output)
    }
 ```
-### Sample Code for sklearn prediction and imported model
+### Sample Code for sklearn prediction and imported model AND user input for prediction
 ```
 import json
 from joblib import dump, load
