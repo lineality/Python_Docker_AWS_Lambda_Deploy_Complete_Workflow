@@ -264,7 +264,6 @@ def handler(event, context):
        'statusCode': 200,
        'body': json.dumps(output)
    }
-
 ```
 ### Sample Code for sklearn prediction and imported model
 ```
@@ -315,7 +314,6 @@ def handler(event, context):
        'statusCode': 200,
        'body': json.dumps(output)
    }
-
 ```
 
 
@@ -616,6 +614,3 @@ Sources used for this documentation are listed at the end of the document.
 
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
-
-...........................................................................
-
