@@ -369,24 +369,6 @@ On several pages (see: https://docs.aws.amazon.com/lambda/latest/dg/images-creat
 "Install any dependencies under the ${LAMBDA_TASK_ROOT} directory alongside the function handler to ensure that the Lambda runtime can locate them when the function is invoked."
 It may be that this is AWS's inexplicably obscure way of saying: files you need to be included in the docker image must be in the same directory(folder) along with the docker file. But this is NOT an instruction regarding python dependencies, even though these statements are made in a context of python, which is highly irresponsible documentation writing practice. But perhaps a directory given the very odd name "${LAMBDA_TASK_ROOT}" could be created and files put inside? ....the situation is very unclear.
 
-
-## Step: Create Dockerfile
-#### As with other processes, you may want to start with a most-simple-docker-method and gradually find fancier methods that suit your projects. 
-
-Create a new file for your project.
-- right click in your ''app' folder and select': new file
-- file name: 
-```
-Dockerfile 
-```
-(with the first letter capitalized)
-- The icon next to the file in Cloud9 should become the docker-whale icon after the file is named 'Dockerfile.'
-- Note: you can also use 
-```
-$ touch Dockerfile
-```
-in the terminal to make the file.
-
 #### Note: The docker image does not automatically include all the files in the directory. You need to specify in the Dockerfile what files you want put where in the file docker container.
 
 ## Step: Add text to Dockerfile
@@ -617,5 +599,6 @@ Sources used for this documentation are listed at the end of the document.
 
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
+
 
 
