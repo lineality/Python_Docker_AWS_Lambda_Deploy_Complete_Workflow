@@ -16,7 +16,7 @@ TODO
 	- see if alpine container starts more quickly than default?
 	- entirely new model...
 	- move into target AWS account
-	
+	https://aws.amazon.com/blogs/machine-learning/using-container-images-to-run-tensorflow-models-in-aws-lambda/ 
 	- maybe section on TF-lite and find way to use TF-docker by adding aws interface to it?
 	- or...
 
@@ -228,11 +228,20 @@ def handler(event, context):
         'body': json.dumps( output )
     }
 ```
-Alternate simpler Example code here: 
+#### Another super simple example:: 
 ```
 def handler(event, context): 
     return 'Hello, world'
 ```
+
+#### This may be useful in testing, it prints the python packages pre-installed in that docker (which might be causing conflicts with new installs):
+
+```
+def handler(event, context): 
+    print("These are the pre-installed modules and libraries:")
+    return print(help("modules"))
+```
+
 #### and more here: https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/
 
 ### Sample TEST Code for sklearn prediction and imported model with with terminal output for testing in cloud9 terminal (without needing to use ECR & aws-Lambda to test)
@@ -381,6 +390,7 @@ If you follow the AWS docs Dockerfile, you will get a warning that pip should be
 
 - double click on new file to open in editor (cloud9)
 - paste in code: (Example working Dockerfile code from AWS docs, this code works):
+#### If you have no additional files to add:
 ```
 FROM public.ecr.aws/lambda/python:3.8
 
@@ -599,5 +609,3 @@ Sources used for this documentation are listed at the end of the document.
 
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
-
-
