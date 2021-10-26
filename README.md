@@ -1,4 +1,4 @@
-under construction
+Under Construction
 
 ```
 TODO
@@ -12,35 +12,29 @@ TODO
 	- zip and move object then unzip?
 	- 
 - input test 
-
 	- see if alpine container starts more quickly than default?
-	- entirely new model...
-	- move into target AWS account
+
 	https://aws.amazon.com/blogs/machine-learning/using-container-images-to-run-tensorflow-models-in-aws-lambda/ 
 	- maybe section on TF-lite and find way to use TF-docker by adding aws interface to it?
 	- or...
 
-
-
 - Experiments to run:
 		- try TFlite
-
 		- try import pre-made env
 			- Try mini-test with simple script and libraries etc.
 		- try script 
 	- find the alpine script...
 https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support
 - add line in docker file to copy-model
-	- basic model deploy
-	- custom model deploy
+	- basic model deploy 
+	- custom model deploy 
 	- slimmer model? 
 	- include a TFlite example
 		- include an alpine linux container?
 	- instructions for adding MFA to root account...
 	- include a sklearn example
-
-- does the directory need to be named app? (yes?)
-	- for python, what is the file structure? (WTF) 
+	env:
+	- for python, what is the file structure?
 	- experiment around with package library install requirements,
 		- venv
 		- raw pip install?
@@ -97,6 +91,7 @@ Along with security, another best practice when using AWS is to delete any old i
 ```
 # Sample file name:
 gga-py-docker-test-2021-09-24-1251-cloud9
+GGA-2021-10-26-10-48-06-osha
 ```
 
 #### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
@@ -408,6 +403,7 @@ RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 CMD [ "app.handler" ]
 ```
 #### If you add files such as a serialized (pickled) model:
+#### Note: if you renamed your model, you need to change that name here too.
 ```
 FROM public.ecr.aws/lambda/python:3.8
 
@@ -457,7 +453,6 @@ $ docker build -t hello-world .
 ```
 #### Check the output of this to make sure the build works completely. You will likely get some pip-warnings no matter what you do, I think you can ignore those. At the end it should say:
 ```
-.....
 Successfully built ###########
 Successfully tagged hello-world:latest
 ```
@@ -609,3 +604,6 @@ Sources used for this documentation are listed at the end of the document.
 
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
+
+end 
+
