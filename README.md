@@ -40,6 +40,110 @@ https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support
 		- raw pip install?
 		- format of requirements file?
 ```
+# Cheatsheet:
+As you may find yourself doing this processing again and again and again and again, here is cheatsheet for the main steps. Below is the full documentation including pre-setup and after-deploying.
+
+#### Here: https://console.aws.amazon.com/cloud9
+#### 1 setup cloud9
+```
+$ sudo yum update; mkdir app; cd app; touch app.py; touch Dockerfile; touch requirements.txt
+```
+#### 2 Dockerfile
+```
+FROM public.ecr.aws/lambda/python:3.8
+
+# Copy function code
+COPY app.py ${LAMBDA_TASK_ROOT}
+
+# Copy serialized (pickled) model
+COPY your_model_name.joblib ${LAMBDA_TASK_ROOT}
+
+## Update pip
+RUN  /var/lang/bin/python3.8 -m pip install --upgrade pip
+
+# Install the function's dependencies using file requirements.txt
+COPY requirements.txt  .
+RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+
+# Set the CMD to your "handler"
+CMD [ "app.handler" ]
+```
+#### 3. APP.py
+```
+import json
+from joblib import dump, load
+import boto3
+ 
+"""
+only joblib is needed to import
+but sklearn (scikit-learn) must be installed
+"""
+ 
+def handler(event, context):
+ 
+   ##################
+   # read the inputs
+   ##################
+   try:
+       input_value = float(event["input_value"])
+ 
+       # inspection
+       print("input format ok")
+ 
+   except (Exception) as error:  # Failure!!
+       output = (f"""Error: There was an input format problem:
+               input_value is a number. {error} \n""")
+       # inspection
+       print(error)
+ 
+ 
+   ##############################
+   # Load Machine Learning Model
+   ##############################
+   # load the picked/serialized ML model into the system
+   regresssion_model_sklearn = load('your_model_name.joblib')
+   # regresssion_model_sklearn_1 = load( response['Body'] )
+  
+   ##################
+   # make prediction
+   ##################
+   prediction = regresssion_model_sklearn.predict([[ input_value ]])
+  
+   # format output (remove square brackets)
+   prediction = prediction[0]
+  
+   # format output json object
+   output = {}
+   output["model_prediction"] = str(prediction)
+  
+   return {
+       'statusCode': 200,
+       'body': json.dumps(output)
+   }
+
+```
+#### 4. requirements.txt
+```
+boto3
+scikit-learn
+```
+
+#### 5. Upload your_model_name.joblib to the app directory in cloud9
+
+#### 6. build and send to AWS
+```
+docker build -t ml-docker-for-aws .
+
+aws ecr create-repository --repository-name ml-docker-for-aws --image-scanning-configuration scanOnPush=true
+
+docker tag ml-docker-for-aws:latest XXX.dkr.ecr.us-east-1.amazonaws.com/ml-docker-for-aws:latest
+
+aws ecr get-login-password | docker login --username AWS --password-stdin XXX.dkr.ecr.us-east-1.amazonaws.com
+
+docker push XXX.dkr.ecr.us-east-1.amazonaws.com/ml-docker-for-aws:latest
+```
+
+# Main Text
 
 ### This article/resource is one in a series of inter-related topics (for creating, deploying, maintaining, and collaborating around, Machine Learning and data science models and analysis):
 1. Model Development Workflow
@@ -519,12 +623,12 @@ CMD [ "app.handler" ]
 - Run this terminal command in the same directory(folder) that contains the Dockerfile:
 - Type this into the terminal (with the trailing space and period included)
 ```
-$ docker build -t DOCKER-FOR-AWS .
+$ docker build -t ml-docker-for-aws .
 ```
 #### Check the output of this to make sure the build works completely. You will likely get some pip-warnings no matter what you do, I think you can ignore those. At the end it should say:
 ```
 Successfully built ###########
-Successfully tagged DOCKER-FOR-AWS:latest
+Successfully tagged ml-docker-for-aws:latest
 ```
 
 #### Note: If previous steps were not done in the correct terminal, directory, etc., then this build will not work. 
@@ -570,10 +674,10 @@ Next will be the steps to deploy your container to AWS-lambda and use AWS-api-ga
 - BUT: replace 123412341234 with your aws number (the 12 digit number you logged in with)
 - & replace us-east-1 with your region (if it differs)
 ```
-$ aws ecr create-repository --repository-name DOCKER-FOR-AWS --image-scanning-configuration scanOnPush=true
-$ docker tag DOCKER-FOR-AWS:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/DOCKER-FOR-AWS:latest
+$ aws ecr create-repository --repository-name ml-docker-for-aws --image-scanning-configuration scanOnPush=true
+$ docker tag ml-docker-for-aws:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/ml-docker-for-aws:latest
 $ aws ecr get-login-password | docker login --username AWS --password-stdin 123412341234.dkr.ecr.us-east-1.amazonaws.com
-$ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/DOCKER-FOR-AWS:latest
+$ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/ml-docker-for-aws:latest
 ```
 #### Note: If you need to make a change to your files and re-upload, your best bet may be to delete your stored image from ECR e.g. https://console.aws.amazon.com/ecr/repositories?region=us-east-1 
 and repeat the above four terminal commands to send a fresh version to ECR
@@ -583,7 +687,7 @@ and repeat the above four terminal commands to send a fresh version to ECR
 - Select: container image (as type along top of GUI) vs. (not) "Author From scratch"
 - Fill in the two fields under basic information (see pic)
 - Function Name -> Make up a function-name
-- Container image uri -> browse images -> pick the named you saved it to (e.g. DOCKER-FOR-AWS)
+- Container image uri -> browse images -> pick the named you saved it to (e.g. ml-docker-for-aws)
 - Press the orange button that says "Create Function"
 
 
@@ -677,3 +781,4 @@ https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker
 
 
 END OF DOC
+
