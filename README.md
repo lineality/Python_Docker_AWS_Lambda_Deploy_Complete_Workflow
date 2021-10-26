@@ -103,7 +103,7 @@ NOT like debian, ubuntu etc (which uses apt)
 To update EC2 container, run this code IN TERMINAL at bottom of interface 
 
 #### Note: On changing this template as you use it
-This template is meant to be pratical for a real project, really deploying a real Machine Learning model to a real working AWS endpoint. A choice you will need to make is: how much to change the code of this template either for testing or for final deployment. e.g. Do you change the name of your model to "your-model-name" so that the template code simply runs? (you can do that) Should you leave the name of the temporarily stored project to be 'hello-world' (you can do that)
+This template is meant to be pratical for a real project, really deploying a real Machine Learning model to a real working AWS endpoint. A choice you will need to make is: how much to change the code of this template either for testing or for final deployment. e.g. Do you change the name of your model to "your-model-name" so that the template code simply runs? (you can do that) Should you leave the name of the temporarily stored project to be 'hello world' (you can do that)
 The fewer things you change, the fewer things can go wrong. However, as you need more customization (maybe a custom designed docker build, etc.) you may need to gradually change this template code. As with any coding, it is recommended to test the code every time you make any change, one change at a time. Changing many things and then running the code later is a recipe for bug-hunt-disasters. 
 
 
@@ -201,10 +201,11 @@ $ sudo yum update; mkdir app; cd app; touch app.py; touch Dockerfile; touch requ
 
 
 
-## Step: Add your code into the python file. Note: because this is for AWS lambda, it will need all the code for a python-aws-lambda. The hello-world sample is very minimal. When you do this for the first time it is advisable to use a simple hello-world printing program, and gradually repeat the whole process using less-simple python programs: e.g.
-- 1st: print hello world
+## Step: Add your code into the python file. Note: because this is for AWS lambda, it will need all the code for a python-aws-lambda. This sample is very minimal. When you do this for the very first time, it is advisable to use a simple "hello-world" printing program. Then gradually carry out the whole process using less-simple python programs: e.g.
+- 1st: print: "hello world"
 - 2nd: use some kind of pip requirements (e.g. a date-time printout)
-- 3rd: do an actual machine learning docker with sklearn or TFlite and a premade simple model (but still that just prints out so you can test the docker easily)
+- 3rd: upload and deploy a machine learning docker with sklearn or TFlite and a premade simple model (but still that just prints out so you can test the docker easily) BUT with a default output NOT taking input (because this can be tested entirely within cloud9)
+- 4th: Add user input to a machine learning model deployment (must be tested using AWS-Lambda)
 - etc.
 
 #### Note: make sure the 'app' folder(directory) in the GUI is selected to show what is inside, or you will not see what is inside.
@@ -433,7 +434,7 @@ CMD [ "app.handler" ]
 
 #### TODO: Using venv in docker?
 
-#### Note: Below, the name for this docker image project used here is hello-world. If you change that, changes in various steps of the process (names, commands, etc.) must also be changed. 
+#### Note: If you change the names of various items, changes in various steps of the process (names, commands, etc.) may also need to be changed. Test each change to make sure it does not break the overall process.
 
 
 
@@ -455,12 +456,12 @@ CMD [ "app.handler" ]
 - Run this terminal command in the same directory(folder) that contains the Dockerfile:
 - Type this into the terminal (with the trailing space and period included)
 ```
-$ docker build -t hello-world .
+$ docker build -t DOCKER-FOR-AWS .
 ```
 #### Check the output of this to make sure the build works completely. You will likely get some pip-warnings no matter what you do, I think you can ignore those. At the end it should say:
 ```
 Successfully built ###########
-Successfully tagged hello-world:latest
+Successfully tagged DOCKER-FOR-AWS:latest
 ```
 
 #### Note: If previous steps were not done in the correct terminal, directory, etc., then this build will not work. 
@@ -506,10 +507,10 @@ Next will be the steps to deploy your container to AWS-lambda and use AWS-api-ga
 - BUT: replace 123412341234 with your aws number (the 12 digit number you logged in with)
 - & replace us-east-1 with your region (if it differs)
 ```
-$ aws ecr create-repository --repository-name hello-world --image-scanning-configuration scanOnPush=true
-$ docker tag hello-world:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
+$ aws ecr create-repository --repository-name DOCKER-FOR-AWS --image-scanning-configuration scanOnPush=true
+$ docker tag DOCKER-FOR-AWS:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/DOCKER-FOR-AWS:latest
 $ aws ecr get-login-password | docker login --username AWS --password-stdin 123412341234.dkr.ecr.us-east-1.amazonaws.com
-$ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
+$ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/DOCKER-FOR-AWS:latest
 ```
 #### Note: If you need to make a change to your files and re-upload, your best bet may be to delete your stored image from ECR e.g. https://console.aws.amazon.com/ecr/repositories?region=us-east-1 
 and repeat the above four terminal commands to send a fresh version to ECR
@@ -519,7 +520,7 @@ and repeat the above four terminal commands to send a fresh version to ECR
 - Select: container image (as type along top of GUI) vs. (not) "Author From scratch"
 - Fill in the two fields under basic information (see pic)
 - Function Name -> Make up a function-name
-- Container image uri -> browse images -> pick the named you saved it to (e.g. hello-world)
+- Container image uri -> browse images -> pick the named you saved it to (e.g. DOCKER-FOR-AWS)
 - Press the orange button that says "Create Function"
 
 
@@ -612,4 +613,5 @@ Sources used for this documentation are listed at the end of the document.
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
 
 
-End
+END OF DOC
+
