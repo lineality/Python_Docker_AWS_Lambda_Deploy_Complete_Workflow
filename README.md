@@ -83,7 +83,9 @@ Like (fragile) python environments (which are best discarded and then recreated 
 Along with security, another best practice when using AWS is to delete any old items that you are finished with (in part to avoid being charged fees to keep them active in your account). Part of removing items can be clear naming of items: including a date-time in the title of your item can make it easy to see what you are deleting. Some resources for AWS are free or very cheap, but it is best practice to not leave old items around, especially if you may be paying for something you will never use again. 
 
 ## Naming
-#### Naming files, directories(folders) and variables in common-sense ways that will make sense to future-you and other people is a create best-practice to follow. e.g.
+#### Naming files, directories(folders) and variables in common-sense ways that will make sense to future-you and other people is a create best-practice to follow. 
+In AWS, resources often appear by name in menu-lists WITHOUT saying what kind of resource it is: Lambda, API, Cloud9, etc. So a good rule of thumb is to put the AWS-resource-type in the name. 
+#### e.g.
 - initials of person who made it: gga
 - what aws service it is: cloud9
 - date-time: 2021-09-24-1251
@@ -91,7 +93,6 @@ Along with security, another best practice when using AWS is to delete any old i
 ```
 # Sample file name:
 gga-py-docker-test-2021-09-24-1251-cloud9
-GGA-2021-10-26-10-48-06-osha
 ```
 
 #### Note: You do not need to type in the "$" symbol. The "$" included in terminal command text here should be excluded when you type it in. The symbol is shown here to indicate that the text is a Terminal command.
@@ -100,6 +101,11 @@ GGA-2021-10-26-10-48-06-osha
 AWS Linux2 uses a YUM package manager, as does redhat, fedora, etc. 
 NOT like debian, ubuntu etc (which uses apt)	
 To update EC2 container, run this code IN TERMINAL at bottom of interface 
+
+#### Note: On changing this template as you use it
+This template is meant to be pratical for a real project, really deploying a real Machine Learning model to a real working AWS endpoint. A choice you will need to make is: how much to change the code of this template either for testing or for final deployment. e.g. Do you change the name of your model to "your-model-name" so that the template code simply runs? (you can do that) Should you leave the name of the temporarily stored project to be 'hello-world' (you can do that)
+The fewer things you change, the fewer things can go wrong. However, as you need more customization (maybe a custom designed docker build, etc.) you may need to gradually change this template code. As with any coding, it is recommended to test the code every time you make any change, one change at a time. Changing many things and then running the code later is a recipe for bug-hunt-disasters. 
+
 
 ### Setup:
 Windows that you may want to have open:
@@ -605,5 +611,5 @@ Sources used for this documentation are listed at the end of the document.
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
 
-end 
 
+End
