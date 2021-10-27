@@ -735,7 +735,130 @@ When you are done using your ECR image, delete it using these instructions:
 
 
 
+## Link Parent-Child Lambda Functions to invoke/call one AWS-lambda function from another
+#### In all likelihood you will need or want to using the functionality of your aws by calling it from another function.
 
+#### This is actually a good resource: 
+https://www.sqlshack.com/calling-an-aws-lambda-function-from-another-lambda-function/ 
+
+#### Parent function: calls/invokes the other function
+#### Child Function: is called
+
+#### Setting up Policy for Parent-Function
+adding specific policies to a new "role," then assign that role to the 
+Parent lambda function.
+
+#### 1. Go to AWS-IAM and select "Policies" 
+#### 2. Click on "Create Policy" and create new policy. 
+#### 3. Click JSON edit:
+#### 4. manually copy paste in this text, BUT add your own info in for these two items:
+- YOUR_12_DIGIT_AWS_NUMBER_HERE
+- NAME_OF_YOUR_LAMBDA_FUNCTION_HERE
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:InvokeAsync"
+            ],
+            "Resource": "arn:aws:lambda:us-east-1:YOUR_12_DIGIT_AWS_NUMBER_HERE:function:NAME_OF_YOUR_LAMBDA_FUNCTION_HERE"
+        }
+    ]
+}
+```
+#### 5. Attach these two policies to the parent function:
+- AWSLambdaBasicExecutionRole
+- NAME_OF_YOUR_NEW_CUSTOM_POLICY
+(see pics)
+#### select configuration (from code, test, etc)
+
+
+#### select edit (far right) general configuration
+
+
+
+
+#### in edit basic settings
+- bump Timeout to above 1 second (can take a while to spin-up child function)
+- select view the ### role (bottom left blue)
+
+#### select attach policy
+
+
+
+
+
+### enter names of your TWO policies, one at a time:
+- AWSLambdaBasicExecutionRole
+- NAME_OF_YOUR_NEW_CUSTOM_POLICY
+- AND check the BOX on the left  for each (don't click on the blue policy name)
+
+
+
+#### click attach policy
+This will add any policies for which you checked the boxes
+
+
+
+
+
+
+
+
+
+##Add this code to your parent AWS-Lambda-Function
+#### note: see the last code for getting the machine learning output from the function output, you will need to do some json type conversion (standard type-change task)
+```
+ 
+   # get input: company id
+   input_for_child_function = YOUR_INPUT
+ 
+   # connect to AWS-lambda "boto3.client"
+   child_lambda_client = boto3.client("lambda")
+ 
+   ###########################
+   # call/invoke child-lambda
+   ###########################
+ 
+   try:
+       inputParams = {
+           "YOUR_INPUT" : input_for_child_function
+       }
+ 
+       response = child_lambda_client.invoke(
+           FunctionName = 'arn:aws:lambda:us-east-1:YOUR_12_DIGIT_AWS_NUMBER_HERE:function:YOUR_CHILD_LAMBDA_NAME_HERE',
+           InvocationType = 'RequestResponse',
+           Payload = json.dumps(inputParams)
+       )
+ 
+       responseFromChild_1 = json.load(response['Payload'])
+ 
+       print(responseFromChild_1)
+ 
+   except Exception as e:
+       # Failed
+       print(str(e))
+       status_code = 430
+       output = f'Error: Failed to call/invoke child lambda function: {str(e)}'
+ 
+   # get the output
+   ## must convert string to json
+   import json
+   dig_into_dictionary = json.loads(responseFromChild_1['body'])
+   int(dig_into_dictionary['YOUR_TARGET_KEY'])
+ 
+ 
+
+```
+
+
+#### Now you should be ready to go. test invoking the child function from the parent
+
+#### Note: reading the 
 
 # Machine Learning Models
 Two of the main python tools for machine learning (related to each-other) are sklearn (also called SciKitLearn) and Tensorflow (TF) (and TFlite or Tensorflow Lite). There are many articles online that explain how they relate to each-other. For our purposes here: TFlite is very small, Tensorflow is small, and Sklearn is bigger. As yet, I cannot recommend a way to use Tensorflow with AWS - work in progress.
@@ -779,6 +902,10 @@ Sources used for this documentation are listed at the end of the document.
 #### Source Copying Directories (e.g. where saved ML models are folders, TFlite)
 https://stackoverflow.com/questions/28599571/add-or-copy-a-folder-in-docker 
 
+#### Source: Call/Invoke one AWS-Lambda-Function from another AWS-Lambda-Function
+https://www.sqlshack.com/calling-an-aws-lambda-function-from-another-lambda-function/ 
+
 
 END OF DOC
+
 
